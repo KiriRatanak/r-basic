@@ -84,12 +84,59 @@ ref: https://www.khmertimeskh.com/50801787/covid-19-cambodia-relaxes-restriction
 ```{r}
 library(readr)
 library(dplyr)
-library(tokenizers)
+library(tidytext)
 library(sentimentr)
-khmer_news <- paste0(read_file('./khmer_news.txt'))
-count_words(khmer_news)
-sentimentr::sentiment(khmer_news)
+khmer_news <- read_file(paste(getwd(), '/khmer_news.txt', sep=""))
+khmer_news
 ```
+### b. perform tokenization and count words
+```{r}
+data <- data.frame(Text=khmer_news) %>%
+  unnest_tokens(Info, Text) %>%
+  count(Info, sort=TRUE)
+data
+```
+### c. replace most repeated word with 'KIT'
+```{r}
+most_repeated = data$Info[1]
+replaced_text = sub(most_repeated, 'KIT', khmer_news)
+replaced_text
+```
+### d. perform sentiment analysis
+```{r}
+library(sentimentr)
+sen1 = sentiment(khmer_news) # To know number of sentences and words(Sentiment at the sentence level)
+print(sen1)
+sen2 = sentiment_by(khmer_news) # total number of words 
+print(sen2)
+sen3 = get_sentences(khmer_news) # To display the sentences
+print(sen3)
+sen4<- emotion(khmer_news) # Emotion at the sentence level
+print(sen4)
+sen5<- emotion_by(khmer_news) # Aggregated emotion by group(s)
+print(sen5)
+sen6<- profanity(khmer_news) # Profanity at the sentence level
+print(sen6)
+sen7<- profanity_by(khmer_news) # Aggregated profanity by group(s)
+sen7
+```
+### e. plot the graph
+```{r}
+library(ggplot2)
+words_graph <- data.frame(Text=khmer_news)%>% 
+  unnest_tokens(Info, Text) %>%
+  count(Info, sort=TRUE)  %>% 
+  ggplot(aes(n, Info)) + geom_col() +
+  xlab("Number of words") +
+  ylab("List of word") +
+  ggtitle("Text mining using R") +
+  theme(axis.title.x=element_text(size=10, color="blue", face="bold", margin=margin(t=20)),
+        axis.title.y=element_text(size=10, color="red", face="bold", margin=margin(r=20)),
+        plot.title=element_text(size=25, color="yellow", face="bold", margin=margin(b=20)))
+words_graph
+ggsave(filename="words_count.png", unit="cm", width=100, height=100)
+```
+
 # 4. Find the assigned Dataset from the list below and perform the following
 
 ### a. import data
@@ -100,7 +147,7 @@ head(organic_data_set)
 
 ### a. clean data
 ```{r}
-organic_data_set <- imputeMissings::impute(data_set)
+organic_data_set <- imputeMissings::impute(organic_data_set)
 organic_data_set
 ```
 
@@ -137,11 +184,13 @@ most_fav_pollster_graph <- most_fav_pollster_graph + theme(
   plot.title = element_text(size = 25, margin = margin(t=0,r=0,b=25,l=0), face = "bold", hjust=0.5, colour = "blue")
 ) + geom_smooth(method ="lm") + coord_cartesian() + scale_color_gradient()
 most_fav_pollster_graph
+ggsave(filename="most_fav_pollster_graph.png", unit="cm", width=50, height=15)
 ```
 ### d. perform facet
 ```{r}
 most_fav_pollster_graph <- most_fav_pollster_graph + facet_grid(. ~ filtered_data$organic_data_set.pollster)
 most_fav_pollster_graph
+ggsave(filename="facet.png", unit="cm", width=100, height=20)
 ```
 
 ### 
