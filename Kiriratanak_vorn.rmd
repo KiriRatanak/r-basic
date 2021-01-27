@@ -17,24 +17,10 @@ range(mat_B)
 ```
 ### b. find max of each row from matrices A and B
 ```{r}
-max_A <- c(
-  max(mat_A[1, 1:6]),
-  max(mat_A[2, 1:6]),
-  max(mat_A[3, 1:6]),
-  max(mat_A[4, 1:6]),
-  max(mat_A[5, 1:6]),
-  max(mat_A[6, 1:6])
-)
-max_B <-c(
-  max(mat_B[1, 1:6]),
-  max(mat_B[2, 1:6]),
-  max(mat_B[3, 1:6]),
-  max(mat_B[4, 1:6]),
-  max(mat_B[5, 1:6]),
-  max(mat_B[6, 1:6])
-)
-max_A
-max_B
+for(row in 1:nrow(mat_A)){
+  print(max(mat_A[row,]))
+  print(max(mat_B[row,]))
+}
 ```
 ### c. find diagnol value of matrices A and B
 ```{r}
@@ -55,12 +41,13 @@ mat_A
 ```
 ### f. multiply matrix A and B, assign to x
 ```{r}
-x <- mat_A * mat_B
+x <- mat_A %*% mat_B
 x
 ```
 ### g. divide matrix A and B
 ```{r}
-mat_A / mat_B
+s_mat_B = solve(mat_B)
+mat_A %*% s_mat_B
 ```
 
 # 2. Create a data frame
@@ -80,7 +67,7 @@ df
 
 ### g. extract last column
 ```{r}
-last_col <- df$X.Random.numbers
+last_col <- df[ncol(df)]
 last_col
 ```
 ### h. find sum, mean and length
