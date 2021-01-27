@@ -1,0 +1,160 @@
+ 
+# 1. Create a matrix
+
+```{r}
+set.seed(5)
+random_data_1 <- sample(1:100, 36)
+random_data_2 <- sample(500: 600, 36)
+mat_A <- matrix(random_data_1, 6, 6)
+mat_B <- matrix(random_data_2, 6, 6)
+mat_A
+mat_B
+```
+### a. find range of matrices A and B
+```{r}
+range(mat_A)
+range(mat_B)
+```
+### b. find max of each row from matrices A and B
+```{r}
+max_A <- c(
+  max(mat_A[1, 1:6]),
+  max(mat_A[2, 1:6]),
+  max(mat_A[3, 1:6]),
+  max(mat_A[4, 1:6]),
+  max(mat_A[5, 1:6]),
+  max(mat_A[6, 1:6])
+)
+max_B <-c(
+  max(mat_B[1, 1:6]),
+  max(mat_B[2, 1:6]),
+  max(mat_B[3, 1:6]),
+  max(mat_B[4, 1:6]),
+  max(mat_B[5, 1:6]),
+  max(mat_B[6, 1:6])
+)
+max_A
+max_B
+```
+### c. find diagnol value of matrices A and B
+```{r}
+diag_A <- diag(mat_A)
+diag_A
+diag_B <- diag(mat_B)
+diag_B
+```
+### d. multiply matrix A and B
+```{r}
+mat_A * mat_B
+```
+
+### e. replace 4th row of matrix A with diagnol value of matrix B
+```{r}
+mat_A[4, 1:6] <- diag_B
+mat_A
+```
+### f. multiply matrix A and B, assign to x
+```{r}
+x <- mat_A * mat_B
+x
+```
+### g. divide matrix A and B
+```{r}
+mat_A / mat_B
+```
+
+# 2. Create a data frame
+```{r}
+set.seed(5)
+df <- data.frame(
+  X.First.name=c('John', 'George', 'Kay', 'Edel', 'Elesis', 'Elesword', 'Ganyu', 'Mike', 'Lass', 'Seighart'),
+  X.Second.name=c('Cena', 'Bush', 'Vidius', 'Amori', 'Frencis', 'Frencis', 'Lapis', 'Tyson', 'Lang', 'Highlander'),
+  Age=sample(c(18:50), 10),
+  Occupation=rep("knight", 10),
+  Place="Teyvet",
+  X.Random.numbers=sample(1:10, 10)
+  )
+df
+#df$X.First.name. <- c('John', 'Bush', 'Kay', 'Edel', 'Elesis', 'Elesword', 'Ganyu', 'Mike', 'Lass', 'Seighart')
+```
+
+### g. extract last column
+```{r}
+last_col <- df$X.Random.numbers
+last_col
+```
+### h. find sum, mean and length
+```{r}
+sum(last_col)
+mean(last_col)
+length(last_col)
+```
+# 3. Create a file
+
+ref: https://www.khmertimeskh.com/50801787/covid-19-cambodia-relaxes-restrictions-singapore-indonesia-promotes-vaccination-plans/
+
+### a. read the file
+```{r}
+library(readr)
+library(dplyr)
+library(tokenizers)
+library(sentimentr)
+khmer_news <- paste0(read_file('./khmer_news.txt'))
+count_words(khmer_news)
+sentimentr::sentiment(khmer_news)
+```
+# 4. Find the assigned Dataset from the list below and perform the following
+
+### a. import data
+```{r}
+organic_data_set <- data.frame(read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/presidential-candidate-favorables-2019/favorability_polls_rv_2019.csv"))
+head(organic_data_set)
+```
+
+### a. clean data
+```{r}
+organic_data_set <- imputeMissings::impute(data_set)
+organic_data_set
+```
+
+### b. find the x and y variables
+
+x: for pollster
+y: for number of favorable
+
+I'm trying to find out which pollster has the highest number of favorable count when hosting the poll
+```{r}
+library(ggplot2)
+filtered_data <- data.frame(organic_data_set$pollster, organic_data_set$favorable)
+head(filtered_data)
+most_fav_pollster_graph <- ggplot(filtered_data, aes(x=filtered_data$organic_data_set.pollster, y=filtered_data$organic_data_set.favorable))
+```
+
+### c. plot graph using geom_col()
+```{r}
+most_fav_pollster_graph <- most_fav_pollster_graph + geom_col(mapping=aes(x=filtered_data$organic_data_set.pollster, y=filtered_data$organic_data_set.favorable))
+
+most_fav_pollster_graph <- most_fav_pollster_graph + theme_minimal()
+most_fav_pollster_graph
+```
+
+### e.
+
+```{r}
+most_fav_pollster_graph <- most_fav_pollster_graph + labs(title="Most favorable pollster", x="Pollster", y="Favorable count")
+
+most_fav_pollster_graph <- most_fav_pollster_graph + theme(
+  axis.title =  element_text(size = 10, face = "bold"),
+  axis.title.x = element_text(margin = margin(t=20,r=0,b=0,l=0), colour = "green"),
+  axis.title.y = element_text(margin = margin(t=0,r=20,b=0,l=0), colour = "yellow"),
+  plot.title = element_text(size = 25, margin = margin(t=0,r=0,b=25,l=0), face = "bold", hjust=0.5, colour = "blue")
+) + geom_smooth(method ="lm") + coord_cartesian() + scale_color_gradient()
+most_fav_pollster_graph
+```
+### d. perform facet
+```{r}
+most_fav_pollster_graph <- most_fav_pollster_graph + facet_grid(. ~ filtered_data$organic_data_set.pollster)
+most_fav_pollster_graph
+```
+
+### 
