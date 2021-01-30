@@ -1,4 +1,4 @@
-# r-basic for academic purpose
+# Data science project for academic purpose
 ## Words count graph
 ![word count graph](https://github.com/KiriRatanak/r-basic/blob/master/words_count.png)
 ## Most favorable pollster
